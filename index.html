@@ -267,7 +267,7 @@
         // Tic Tac Toe
         const tttCells = document.querySelectorAll('.ttt-cell');
         const tttStatus = document.getElementById('ttt-status');
-        const tttRestart = document.getElementById('ttt-restart');
+        const tttRestartBtn = document.getElementById('ttt-restart');
 
         let tttBoard = ['', '', '', '', '', '', '', '', ''];
         let tttPlayer = 'X';
@@ -316,7 +316,7 @@
             });
         }
 
-        function tttRestart() {
+        function tttRestartGame() {
             tttBoard = ['', '', '', '', '', '', '', '', ''];
             tttPlayer = 'X';
             tttActive = true;
@@ -328,7 +328,7 @@
         }
 
         tttCells.forEach(c => c.addEventListener('click', tttClick));
-        tttRestart.addEventListener('click', tttRestart);
+        tttRestartBtn.addEventListener('click', tttRestartGame);
 
         // Connect 4
         const c4Board = document.getElementById('c4-board');
