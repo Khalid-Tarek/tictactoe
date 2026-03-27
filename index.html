@@ -586,8 +586,8 @@
         const snakeDirBtns = document.querySelectorAll('.snake-btn');
 
         const SNAKE_SIZE = 20;
-        const SNAKE_COLS = SNAKE_SIZE;
-        const SNAKE_ROWS = SNAKE_ROWS = 15;
+        const SNAKE_COLS = 15;
+        const SNAKE_ROWS = 15;
 
         let snake = [];
         let food = {};
@@ -737,8 +737,7 @@
                 memoryBoard.appendChild(card);
             });
 
-            memoryCards = document.querySelectorAll('.memory-card');
-            memoryCards.forEach(card => {
+            document.querySelectorAll('.memory-card').forEach(card => {
                 card.addEventListener('click', () => flipCard(card));
             });
         }
@@ -842,7 +841,7 @@
                 if (simonLocked) return;
                 flash(btn);
 
-                if (btn.dataset.color != simonSequence[simonPlayerPos]) {
+                if (parseInt(btn.dataset.color) !== simonSequence[simonPlayerPos]) {
                     simonGameOver();
                     return;
                 }
