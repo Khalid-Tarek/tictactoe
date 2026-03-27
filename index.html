@@ -30,13 +30,15 @@
 
         .tabs {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 20px;
+            justify-content: center;
         }
 
         .tab-btn {
-            padding: 12px 30px;
-            font-size: 1.1rem;
+            padding: 10px 20px;
+            font-size: 1rem;
             background: rgba(255,255,255,0.2);
             color: white;
             border: 2px solid rgba(255,255,255,0.3);
@@ -100,14 +102,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .ttt-cell.x {
-            color: #667eea;
-        }
-
-        .ttt-cell.o {
-            color: #764ba2;
-        }
-
+        .ttt-cell.x { color: #667eea; }
+        .ttt-cell.o { color: #764ba2; }
         .ttt-cell.winner {
             background: #4ade80;
             animation: pulse 0.5s ease-in-out;
@@ -134,20 +130,15 @@
             transition: all 0.3s ease;
         }
 
-        .c4-cell:hover:not(:disabled) {
-            background: #e0e7ff;
-        }
-
+        .c4-cell:hover:not(:disabled) { background: #e0e7ff; }
         .c4-cell.red {
             background: #ef4444;
             box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
         }
-
         .c4-cell.yellow {
             background: #fbbf24;
             box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
         }
-
         .c4-cell.winner {
             animation: pulse 0.5s ease-in-out;
             box-shadow: 0 0 20px #4ade80;
@@ -170,23 +161,111 @@
             transition: all 0.3s ease;
         }
 
-        .c4-drop-btn:hover {
-            background: rgba(255,255,255,0.5);
+        .c4-drop-btn:hover { background: rgba(255,255,255,0.5); }
+
+        /* Snake Styles */
+        #snake-canvas {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
 
+        .snake-controls {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .snake-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .snake-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* Memory Match Styles */
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 80px);
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .memory-card {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .memory-card:hover { transform: scale(1.05); }
+        .memory-card.flipped {
+            background: #667eea;
+            transform: rotateY(180deg);
+        }
+        .memory-card.matched {
+            background: #4ade80;
+            cursor: default;
+        }
+
+        /* Simon Says Styles */
+        .simon-board {
+            display: grid;
+            grid-template-columns: repeat(2, 150px);
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 50%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .simon-btn {
+            width: 150px;
+            height: 150px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.6;
+        }
+
+        .simon-btn:hover { opacity: 0.8; }
+        .simon-btn.lit { opacity: 1; transform: scale(1.05); }
+        .simon-btn.green { background: #4ade80; }
+        .simon-btn.red { background: #ef4444; }
+        .simon-btn.yellow { background: #fbbf24; }
+        .simon-btn.blue { background: #3b82f6; }
+
+        /* Breakout Styles */
+        #breakout-canvas {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        /* Common Styles */
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
-        }
-
-        @keyframes drop {
-            0% { transform: translateY(-200px); opacity: 0; }
-            60% { transform: translateY(10px); opacity: 1; }
-            100% { transform: translateY(0); }
-        }
-
-        .c4-cell.dropping {
-            animation: drop 0.4s ease-out;
         }
 
         .restart-btn {
@@ -206,6 +285,12 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+
+        .score {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -214,6 +299,10 @@
     <div class="tabs">
         <button class="tab-btn active" data-game="tictactoe">Tic Tac Toe</button>
         <button class="tab-btn" data-game="connect4">Connect 4</button>
+        <button class="tab-btn" data-game="snake">Snake</button>
+        <button class="tab-btn" data-game="memory">Memory</button>
+        <button class="tab-btn" data-game="simon">Simon</button>
+        <button class="tab-btn" data-game="breakout">Breakout</button>
     </div>
 
     <!-- Tic Tac Toe -->
@@ -249,6 +338,49 @@
         <button class="restart-btn" id="c4-restart">New Game</button>
     </div>
 
+    <!-- Snake -->
+    <div class="game-container" id="snake">
+        <div class="status" id="snake-status">Press Start or Arrow Keys</div>
+        <div class="score" id="snake-score">Score: 0</div>
+        <canvas id="snake-canvas" width="300" height="300"></canvas>
+        <div class="snake-controls">
+            <button class="snake-btn" data-dir="up">↑</button>
+            <button class="snake-btn" data-dir="left">←</button>
+            <button class="snake-btn" data-dir="down">↓</button>
+            <button class="snake-btn" data-dir="right">→</button>
+        </div>
+        <button class="restart-btn" id="snake-start">Start Game</button>
+    </div>
+
+    <!-- Memory Match -->
+    <div class="game-container" id="memory">
+        <div class="status" id="memory-status">Find all matching pairs!</div>
+        <div class="score" id="memory-moves">Moves: 0</div>
+        <div class="memory-board" id="memory-board"></div>
+        <button class="restart-btn" id="memory-restart">New Game</button>
+    </div>
+
+    <!-- Simon Says -->
+    <div class="game-container" id="simon">
+        <div class="status" id="simon-status">Watch the pattern, then repeat!</div>
+        <div class="score" id="simon-score">Round: 0</div>
+        <div class="simon-board">
+            <button class="simon-btn green" data-color="0"></button>
+            <button class="simon-btn red" data-color="1"></button>
+            <button class="simon-btn yellow" data-color="2"></button>
+            <button class="simon-btn blue" data-color="3"></button>
+        </div>
+        <button class="restart-btn" id="simon-start">Start Game</button>
+    </div>
+
+    <!-- Breakout -->
+    <div class="game-container" id="breakout">
+        <div class="status" id="breakout-status">Press Start to play!</div>
+        <div class="score" id="breakout-score">Score: 0 | Lives: 3</div>
+        <canvas id="breakout-canvas" width="400" height="300"></canvas>
+        <button class="restart-btn" id="breakout-start">Start Game</button>
+    </div>
+
     <script>
         // Tab switching
         const tabBtns = document.querySelectorAll('.tab-btn');
@@ -264,7 +396,7 @@
             });
         });
 
-        // Tic Tac Toe
+        // ============ TIC TAC TOE ============
         const tttCells = document.querySelectorAll('.ttt-cell');
         const tttStatus = document.getElementById('ttt-status');
         const tttRestartBtn = document.getElementById('ttt-restart');
@@ -330,10 +462,10 @@
         tttCells.forEach(c => c.addEventListener('click', tttClick));
         tttRestartBtn.addEventListener('click', tttRestartGame);
 
-        // Connect 4
+        // ============ CONNECT 4 ============
         const c4Board = document.getElementById('c4-board');
         const c4Status = document.getElementById('c4-status');
-        const c4Restart = document.getElementById('c4-restart');
+        const c4RestartBtn = document.getElementById('c4-restart');
         const c4DropBtns = document.querySelectorAll('.c4-drop-btn');
 
         const C4_ROWS = 6;
@@ -386,9 +518,7 @@
 
         function c4CheckWin(row, col) {
             const player = c4BoardState[row][col];
-            const directions = [
-                [0, 1],  [1, 0],  [1, 1],  [1, -1]
-            ];
+            const directions = [[0, 1], [1, 0], [1, 1], [1, -1]];
 
             for (const [dr, dc] of directions) {
                 let count = 1;
@@ -444,9 +574,447 @@
         }
 
         c4DropBtns.forEach(btn => btn.addEventListener('click', () => c4Drop(parseInt(btn.dataset.col))));
-        c4Restart.addEventListener('click', c4RestartGame);
-
+        c4RestartBtn.addEventListener('click', c4RestartGame);
         initC4();
+
+        // ============ SNAKE ============
+        const snakeCanvas = document.getElementById('snake-canvas');
+        const snakeCtx = snakeCanvas.getContext('2d');
+        const snakeStatus = document.getElementById('snake-status');
+        const snakeScore = document.getElementById('snake-score');
+        const snakeStartBtn = document.getElementById('snake-start');
+        const snakeDirBtns = document.querySelectorAll('.snake-btn');
+
+        const SNAKE_SIZE = 20;
+        const SNAKE_COLS = SNAKE_SIZE;
+        const SNAKE_ROWS = SNAKE_ROWS = 15;
+
+        let snake = [];
+        let food = {};
+        let snakeDir = { x: 1, y: 0 };
+        let snakeNextDir = { x: 1, y: 0 };
+        let snakeRunning = false;
+        let snakeScoreVal = 0;
+        let snakeInterval = null;
+
+        function initSnake() {
+            snake = [{ x: 5, y: 7 }, { x: 4, y: 7 }, { x: 3, y: 7 }];
+            snakeDir = { x: 1, y: 0 };
+            snakeNextDir = { x: 1, y: 0 };
+            snakeScoreVal = 0;
+            snakeScore.textContent = 'Score: 0';
+            placeFood();
+            drawSnake();
+        }
+
+        function placeFood() {
+            do {
+                food = {
+                    x: Math.floor(Math.random() * SNAKE_COLS),
+                    y: Math.floor(Math.random() * SNAKE_ROWS)
+                };
+            } while (snake.some(s => s.x === food.x && s.y === food.y));
+        }
+
+        function drawSnake() {
+            snakeCtx.fillStyle = '#667eea';
+            snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+            snakeCtx.fillStyle = '#4ade80';
+            snake.forEach((seg, i) => {
+                snakeCtx.fillRect(seg.x * SNAKE_SIZE, seg.y * SNAKE_SIZE, SNAKE_SIZE - 2, SNAKE_SIZE - 2);
+            });
+
+            snakeCtx.fillStyle = '#ef4444';
+            snakeCtx.fillRect(food.x * SNAKE_SIZE, food.y * SNAKE_SIZE, SNAKE_SIZE - 2, SNAKE_SIZE - 2);
+        }
+
+        function updateSnake() {
+            snakeDir = snakeNextDir;
+            const head = { x: snake[0].x + snakeDir.x, y: snake[0].y + snakeDir.y };
+
+            // Wall collision
+            if (head.x < 0 || head.x >= SNAKE_COLS || head.y < 0 || head.y >= SNAKE_ROWS) {
+                gameOver();
+                return;
+            }
+
+            // Self collision
+            if (snake.some(s => s.x === head.x && s.y === head.y)) {
+                gameOver();
+                return;
+            }
+
+            snake.unshift(head);
+
+            // Food collision
+            if (head.x === food.x && head.y === food.y) {
+                snakeScoreVal += 10;
+                snakeScore.textContent = `Score: ${snakeScoreVal}`;
+                placeFood();
+            } else {
+                snake.pop();
+            }
+
+            drawSnake();
+        }
+
+        function gameOver() {
+            snakeRunning = false;
+            clearInterval(snakeInterval);
+            snakeStatus.textContent = 'Game Over! Press Start to play again';
+            snakeStartBtn.textContent = 'Start Game';
+        }
+
+        function startSnake() {
+            if (snakeRunning) {
+                snakeRunning = false;
+                clearInterval(snakeInterval);
+                snakeStatus.textContent = 'Paused';
+                snakeStartBtn.textContent = 'Resume';
+                return;
+            }
+
+            if (snake.length === 0) initSnake();
+            snakeRunning = true;
+            snakeStatus.textContent = 'Eat the red food!';
+            snakeStartBtn.textContent = 'Pause';
+            snakeInterval = setInterval(updateSnake, 150);
+        }
+
+        snakeStartBtn.addEventListener('click', startSnake);
+        snakeDirBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const dir = btn.dataset.dir;
+                if (dir === 'up' && snakeDir.y !== 1) snakeNextDir = { x: 0, y: -1 };
+                if (dir === 'down' && snakeDir.y !== -1) snakeNextDir = { x: 0, y: 1 };
+                if (dir === 'left' && snakeDir.x !== 1) snakeNextDir = { x: -1, y: 0 };
+                if (dir === 'right' && snakeDir.x !== -1) snakeNextDir = { x: 1, y: 0 };
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('snake').classList.contains('active')) return;
+            if (e.key === 'ArrowUp' && snakeDir.y !== 1) snakeNextDir = { x: 0, y: -1 };
+            if (e.key === 'ArrowDown' && snakeDir.y !== -1) snakeNextDir = { x: 0, y: 1 };
+            if (e.key === 'ArrowLeft' && snakeDir.x !== 1) snakeNextDir = { x: -1, y: 0 };
+            if (e.key === 'ArrowRight' && snakeDir.x !== -1) snakeNextDir = { x: 1, y: 0 };
+            if (e.key === ' ' || e.key === 'Enter') startSnake();
+        });
+
+        initSnake();
+
+        // ============ MEMORY MATCH ============
+        const memoryBoard = document.getElementById('memory-board');
+        const memoryStatus = document.getElementById('memory-status');
+        const memoryMoves = document.getElementById('memory-moves');
+        const memoryRestart = document.getElementById('memory-restart');
+
+        const memoryEmojis = ['🎮', '🎯', '🎲', '🎪', '🎨', '🎭', '🎹', '🎸'];
+        let memoryCards = [];
+        let flipped = [];
+        let matched = [];
+        let moves = 0;
+        let memoryLocked = false;
+
+        function initMemory() {
+            memoryBoard.innerHTML = '';
+            flipped = [];
+            matched = [];
+            moves = 0;
+            memoryMoves.textContent = 'Moves: 0';
+            memoryStatus.textContent = 'Find all matching pairs!';
+            memoryLocked = false;
+
+            const cards = [...memoryEmojis, ...memoryEmojis]
+                .sort(() => Math.random() - 0.5);
+
+            cards.forEach((emoji, i) => {
+                const card = document.createElement('button');
+                card.className = 'memory-card';
+                card.dataset.index = i;
+                card.dataset.emoji = emoji;
+                memoryBoard.appendChild(card);
+            });
+
+            memoryCards = document.querySelectorAll('.memory-card');
+            memoryCards.forEach(card => {
+                card.addEventListener('click', () => flipCard(card));
+            });
+        }
+
+        function flipCard(card) {
+            if (memoryLocked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+            card.classList.add('flipped');
+            card.textContent = card.dataset.emoji;
+            flipped.push(card);
+
+            if (flipped.length === 2) {
+                moves++;
+                memoryMoves.textContent = `Moves: ${moves}`;
+                memoryLocked = true;
+
+                const [c1, c2] = flipped;
+                if (c1.dataset.emoji === c2.dataset.emoji) {
+                    c1.classList.add('matched');
+                    c2.classList.add('matched');
+                    matched.push(c1, c2);
+                    flipped = [];
+                    memoryLocked = false;
+
+                    if (matched.length === memoryCards.length) {
+                        memoryStatus.textContent = `You won in ${moves} moves!`;
+                    }
+                } else {
+                    setTimeout(() => {
+                        c1.classList.remove('flipped');
+                        c1.textContent = '';
+                        c2.classList.remove('flipped');
+                        c2.textContent = '';
+                        flipped = [];
+                        memoryLocked = false;
+                    }, 1000);
+                }
+            }
+        }
+
+        memoryRestart.addEventListener('click', initMemory);
+        initMemory();
+
+        // ============ SIMON SAYS ============
+        const simonBtns = document.querySelectorAll('.simon-btn');
+        const simonStatus = document.getElementById('simon-status');
+        const simonScore = document.getElementById('simon-score');
+        const simonStart = document.getElementById('simon-start');
+
+        const simonColors = ['green', 'red', 'yellow', 'blue'];
+        let simonSequence = [];
+        let simonRound = 0;
+        let simonPlayerPos = 0;
+        let simonLocked = false;
+
+        function flash(btn) {
+            btn.classList.add('lit');
+            setTimeout(() => btn.classList.remove('lit'), 300);
+        }
+
+        function playSimonSequence() {
+            simonLocked = true;
+            let i = 0;
+            const interval = setInterval(() => {
+                const btn = simonBtns[simonSequence[i]];
+                flash(btn);
+                i++;
+                if (i >= simonSequence.length) {
+                    clearInterval(interval);
+                    simonLocked = false;
+                    simonStatus.textContent = 'Your turn!';
+                }
+            }, 600);
+        }
+
+        function simonNextRound() {
+            simonRound++;
+            simonScore.textContent = `Round: ${simonRound}`;
+            simonSequence.push(Math.floor(Math.random() * 4));
+            simonPlayerPos = 0;
+            setTimeout(playSimonSequence, 500);
+        }
+
+        function simonGameOver() {
+            simonLocked = true;
+            simonStatus.textContent = `Game Over! You reached round ${simonRound}`;
+            simonStart.textContent = 'Try Again';
+        }
+
+        function simonStartGame() {
+            simonSequence = [];
+            simonRound = 0;
+            simonScore.textContent = 'Round: 0';
+            simonStart.textContent = 'Restart';
+            simonStatus.textContent = 'Watch the pattern!';
+            simonNextRound();
+        }
+
+        simonBtns.forEach((btn, i) => {
+            btn.addEventListener('click', () => {
+                if (simonLocked) return;
+                flash(btn);
+
+                if (btn.dataset.color != simonSequence[simonPlayerPos]) {
+                    simonGameOver();
+                    return;
+                }
+
+                simonPlayerPos++;
+                if (simonPlayerPos >= simonSequence.length) {
+                    simonLocked = true;
+                    simonStatus.textContent = 'Nice! Watch next pattern...';
+                    setTimeout(simonNextRound, 1000);
+                }
+            });
+        });
+
+        simonStart.addEventListener('click', simonStartGame);
+
+        // ============ BREAKOUT ============
+        const breakoutCanvas = document.getElementById('breakout-canvas');
+        const breakoutCtx = breakoutCanvas.getContext('2d');
+        const breakoutStatus = document.getElementById('breakout-status');
+        const breakoutScore = document.getElementById('breakout-score');
+        const breakoutStart = document.getElementById('breakout-start');
+
+        const B_WIDTH = 400;
+        const B_HEIGHT = 300;
+        const B_PADDLE_W = 80;
+        const B_PADDLE_H = 10;
+        const B_BALL_R = 8;
+        const B_BRICK_W = 50;
+        const B_BRICK_H = 20;
+        const B_BRICK_ROWS = 5;
+        const B_BRICK_COLS = 8;
+
+        let paddle = { x: B_WIDTH / 2 - B_PADDLE_W / 2 };
+        let ball = { x: B_WIDTH / 2, y: B_HEIGHT - 30, dx: 4, dy: -4 };
+        let bricks = [];
+        let breakoutScoreVal = 0;
+        let lives = 3;
+        let breakoutRunning = false;
+        let breakoutInterval = null;
+        let mouseX = B_WIDTH / 2;
+
+        function initBricks() {
+            bricks = [];
+            for (let r = 0; r < B_BRICK_ROWS; r++) {
+                for (let c = 0; c < B_BRICK_COLS; c++) {
+                    bricks.push({
+                        x: c * (B_BRICK_W + 5) + 10,
+                        y: r * (B_BRICK_H + 5) + 30,
+                        alive: true,
+                        color: ['#ef4444', '#fbbf24', '#4ade80', '#3b82f6', '#a855f7'][r]
+                    });
+                }
+            }
+        }
+
+        function resetBall() {
+            ball = { x: B_WIDTH / 2, y: B_HEIGHT - 30, dx: 4, dy: -4 };
+            paddle.x = B_WIDTH / 2 - B_PADDLE_W / 2;
+        }
+
+        function drawBreakout() {
+            breakoutCtx.clearRect(0, 0, B_WIDTH, B_HEIGHT);
+
+            // Paddle
+            breakoutCtx.fillStyle = '#667eea';
+            breakoutCtx.fillRect(paddle.x, B_HEIGHT - B_PADDLE_H - 10, B_PADDLE_W, B_PADDLE_H);
+
+            // Ball
+            breakoutCtx.beginPath();
+            breakoutCtx.arc(ball.x, ball.y, B_BALL_R, 0, Math.PI * 2);
+            breakoutCtx.fillStyle = 'white';
+            breakoutCtx.fill();
+
+            // Bricks
+            bricks.forEach(brick => {
+                if (brick.alive) {
+                    breakoutCtx.fillStyle = brick.color;
+                    breakoutCtx.fillRect(brick.x, brick.y, B_BRICK_W, B_BRICK_H);
+                }
+            });
+        }
+
+        function updateBreakout() {
+            paddle.x = mouseX - B_PADDLE_W / 2;
+            if (paddle.x < 0) paddle.x = 0;
+            if (paddle.x > B_WIDTH - B_PADDLE_W) paddle.x = B_WIDTH - B_PADDLE_W;
+
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Wall collisions
+            if (ball.x - B_BALL_R < 0 || ball.x + B_BALL_R > B_WIDTH) {
+                ball.dx = -ball.dx;
+            }
+            if (ball.y - B_BALL_R < 0) {
+                ball.dy = -ball.dy;
+            }
+
+            // Paddle collision
+            if (ball.y + B_BALL_R > B_HEIGHT - B_PADDLE_H - 10 &&
+                ball.y - B_BALL_R < B_HEIGHT - 10 &&
+                ball.x > paddle.x && ball.x < paddle.x + B_PADDLE_W) {
+                ball.dy = -Math.abs(ball.dy);
+            }
+
+            // Brick collisions
+            bricks.forEach(brick => {
+                if (brick.alive &&
+                    ball.x > brick.x && ball.x < brick.x + B_BRICK_W &&
+                    ball.y > brick.y && ball.y < brick.y + B_BRICK_H) {
+                    brick.alive = false;
+                    ball.dy = -ball.dy;
+                    breakoutScoreVal += 10;
+                }
+            });
+
+            // Bottom - lose life
+            if (ball.y + B_BALL_R > B_HEIGHT) {
+                lives--;
+                if (lives <= 0) {
+                    breakoutRunning = false;
+                    clearInterval(breakoutInterval);
+                    breakoutStatus.textContent = 'Game Over! Press Start to play again';
+                    breakoutStart.textContent = 'Start Game';
+                } else {
+                    resetBall();
+                }
+            }
+
+            // Win condition
+            if (bricks.every(b => !b.alive)) {
+                breakoutRunning = false;
+                clearInterval(breakoutInterval);
+                breakoutStatus.textContent = 'You Win! Press Start to play again';
+                breakoutStart.textContent = 'Start Game';
+            }
+
+            breakoutScore.textContent = `Score: ${breakoutScoreVal} | Lives: ${lives}`;
+            drawBreakout();
+        }
+
+        function startBreakout() {
+            if (breakoutRunning) {
+                breakoutRunning = false;
+                clearInterval(breakoutInterval);
+                breakoutStatus.textContent = 'Paused';
+                breakoutStart.textContent = 'Resume';
+                return;
+            }
+
+            if (lives <= 0 || bricks.every(b => !b.alive)) {
+                breakoutScoreVal = 0;
+                lives = 3;
+                initBricks();
+                resetBall();
+            }
+
+            breakoutRunning = true;
+            breakoutStatus.textContent = 'Break all the bricks!';
+            breakoutStart.textContent = 'Pause';
+            breakoutInterval = setInterval(updateBreakout, 16);
+        }
+
+        breakoutCanvas.addEventListener('mousemove', (e) => {
+            const rect = breakoutCanvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+        });
+
+        breakoutStart.addEventListener('click', startBreakout);
+        initBricks();
+        resetBall();
+        drawBreakout();
     </script>
 </body>
 </html>
