@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe</title>
+    <title>Game Center</title>
     <style>
         * {
             margin: 0;
@@ -16,12 +16,9 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-        }
-
-        .container {
-            text-align: center;
+            padding: 20px;
         }
 
         h1 {
@@ -31,6 +28,43 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .game-container {
+            display: none;
+            text-align: center;
+        }
+
+        .game-container.active {
+            display: block;
+        }
+
         .status {
             color: white;
             font-size: 1.5rem;
@@ -38,7 +72,8 @@
             min-height: 36px;
         }
 
-        .board {
+        /* Tic Tac Toe Styles */
+        .ttt-board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-gap: 10px;
@@ -48,7 +83,7 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
 
-        .cell {
+        .ttt-cell {
             width: 100px;
             height: 100px;
             background: white;
@@ -60,27 +95,98 @@
             transition: all 0.3s ease;
         }
 
-        .cell:hover:not(:disabled) {
+        .ttt-cell:hover:not(:disabled) {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .cell.x {
+        .ttt-cell.x {
             color: #667eea;
         }
 
-        .cell.o {
+        .ttt-cell.o {
             color: #764ba2;
         }
 
-        .cell.winner {
+        .ttt-cell.winner {
             background: #4ade80;
             animation: pulse 0.5s ease-in-out;
+        }
+
+        /* Connect 4 Styles */
+        .c4-board {
+            display: grid;
+            grid-template-columns: repeat(7, 60px);
+            grid-gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .c4-cell {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .c4-cell:hover:not(:disabled) {
+            background: #e0e7ff;
+        }
+
+        .c4-cell.red {
+            background: #ef4444;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .c4-cell.yellow {
+            background: #fbbf24;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .c4-cell.winner {
+            animation: pulse 0.5s ease-in-out;
+            box-shadow: 0 0 20px #4ade80;
+        }
+
+        .c4-drop-zone {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .c4-drop-btn {
+            width: 60px;
+            height: 30px;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .c4-drop-btn:hover {
+            background: rgba(255,255,255,0.5);
         }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
+        }
+
+        @keyframes drop {
+            0% { transform: translateY(-200px); opacity: 0; }
+            60% { transform: translateY(10px); opacity: 1; }
+            100% { transform: translateY(0); }
+        }
+
+        .c4-cell.dropping {
+            animation: drop 0.4s ease-out;
         }
 
         .restart-btn {
@@ -103,93 +209,244 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tic Tac Toe</h1>
-        <div class="status" id="status">Player X's turn</div>
-        <div class="board" id="board">
-            <button class="cell" data-index="0"></button>
-            <button class="cell" data-index="1"></button>
-            <button class="cell" data-index="2"></button>
-            <button class="cell" data-index="3"></button>
-            <button class="cell" data-index="4"></button>
-            <button class="cell" data-index="5"></button>
-            <button class="cell" data-index="6"></button>
-            <button class="cell" data-index="7"></button>
-            <button class="cell" data-index="8"></button>
+    <h1>Game Center</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-game="tictactoe">Tic Tac Toe</button>
+        <button class="tab-btn" data-game="connect4">Connect 4</button>
+    </div>
+
+    <!-- Tic Tac Toe -->
+    <div class="game-container active" id="tictactoe">
+        <div class="status" id="ttt-status">Player X's turn</div>
+        <div class="ttt-board" id="ttt-board">
+            <button class="ttt-cell" data-index="0"></button>
+            <button class="ttt-cell" data-index="1"></button>
+            <button class="ttt-cell" data-index="2"></button>
+            <button class="ttt-cell" data-index="3"></button>
+            <button class="ttt-cell" data-index="4"></button>
+            <button class="ttt-cell" data-index="5"></button>
+            <button class="ttt-cell" data-index="6"></button>
+            <button class="ttt-cell" data-index="7"></button>
+            <button class="ttt-cell" data-index="8"></button>
         </div>
-        <button class="restart-btn" id="restartBtn">New Game</button>
+        <button class="restart-btn" id="ttt-restart">New Game</button>
+    </div>
+
+    <!-- Connect 4 -->
+    <div class="game-container" id="connect4">
+        <div class="status" id="c4-status">Player Red's turn</div>
+        <div class="c4-drop-zone" id="c4-drop-zone">
+            <button class="c4-drop-btn" data-col="0"></button>
+            <button class="c4-drop-btn" data-col="1"></button>
+            <button class="c4-drop-btn" data-col="2"></button>
+            <button class="c4-drop-btn" data-col="3"></button>
+            <button class="c4-drop-btn" data-col="4"></button>
+            <button class="c4-drop-btn" data-col="5"></button>
+            <button class="c4-drop-btn" data-col="6"></button>
+        </div>
+        <div class="c4-board" id="c4-board"></div>
+        <button class="restart-btn" id="c4-restart">New Game</button>
     </div>
 
     <script>
-        const cells = document.querySelectorAll('.cell');
-        const status = document.getElementById('status');
-        const restartBtn = document.getElementById('restartBtn');
+        // Tab switching
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const gameContainers = document.querySelectorAll('.game-container');
 
-        let board = ['', '', '', '', '', '', '', '', ''];
-        let currentPlayer = 'X';
-        let gameActive = true;
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const game = btn.dataset.game;
+                tabBtns.forEach(b => b.classList.remove('active'));
+                gameContainers.forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(game).classList.add('active');
+            });
+        });
 
-        const winPatterns = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-            [0, 4, 8], [2, 4, 6]             // diagonals
+        // Tic Tac Toe
+        const tttCells = document.querySelectorAll('.ttt-cell');
+        const tttStatus = document.getElementById('ttt-status');
+        const tttRestart = document.getElementById('ttt-restart');
+
+        let tttBoard = ['', '', '', '', '', '', '', '', ''];
+        let tttPlayer = 'X';
+        let tttActive = true;
+
+        const tttWins = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
         ];
 
-        function handleCellClick(e) {
-            const index = e.target.dataset.index;
+        function tttClick(e) {
+            const idx = e.target.dataset.index;
+            if (tttBoard[idx] !== '' || !tttActive) return;
 
-            if (board[index] !== '' || !gameActive) return;
+            tttBoard[idx] = tttPlayer;
+            e.target.textContent = tttPlayer;
+            e.target.classList.add(tttPlayer.toLowerCase());
 
-            board[index] = currentPlayer;
-            e.target.textContent = currentPlayer;
-            e.target.classList.add(currentPlayer.toLowerCase());
-
-            if (checkWin()) {
-                status.textContent = `Player ${currentPlayer} wins!`;
-                gameActive = false;
-                highlightWinner();
+            if (tttCheckWin()) {
+                tttStatus.textContent = `Player ${tttPlayer} wins!`;
+                tttActive = false;
+                tttHighlight();
                 return;
             }
 
-            if (board.every(cell => cell !== '')) {
-                status.textContent = "It's a draw!";
-                gameActive = false;
+            if (tttBoard.every(c => c !== '')) {
+                tttStatus.textContent = "It's a draw!";
+                tttActive = false;
                 return;
             }
 
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            status.textContent = `Player ${currentPlayer}'s turn`;
+            tttPlayer = tttPlayer === 'X' ? 'O' : 'X';
+            tttStatus.textContent = `Player ${tttPlayer}'s turn`;
         }
 
-        function checkWin() {
-            return winPatterns.some(pattern => {
-                return pattern.every(index => board[index] === currentPlayer);
-            });
+        function tttCheckWin() {
+            return tttWins.some(p => p.every(i => tttBoard[i] === tttPlayer));
         }
 
-        function highlightWinner() {
-            winPatterns.forEach(pattern => {
-                if (pattern.every(index => board[index] === currentPlayer)) {
-                    pattern.forEach(index => {
-                        cells[index].classList.add('winner');
-                    });
+        function tttHighlight() {
+            tttWins.forEach(p => {
+                if (p.every(i => tttBoard[i] === tttPlayer)) {
+                    p.forEach(i => tttCells[i].classList.add('winner'));
                 }
             });
         }
 
-        function restartGame() {
-            board = ['', '', '', '', '', '', '', '', ''];
-            currentPlayer = 'X';
-            gameActive = true;
-            status.textContent = "Player X's turn";
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.classList.remove('x', 'o', 'winner');
+        function tttRestart() {
+            tttBoard = ['', '', '', '', '', '', '', '', ''];
+            tttPlayer = 'X';
+            tttActive = true;
+            tttStatus.textContent = "Player X's turn";
+            tttCells.forEach(c => {
+                c.textContent = '';
+                c.classList.remove('x', 'o', 'winner');
             });
         }
 
-        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
-        restartBtn.addEventListener('click', restartGame);
+        tttCells.forEach(c => c.addEventListener('click', tttClick));
+        tttRestart.addEventListener('click', tttRestart);
+
+        // Connect 4
+        const c4Board = document.getElementById('c4-board');
+        const c4Status = document.getElementById('c4-status');
+        const c4Restart = document.getElementById('c4-restart');
+        const c4DropBtns = document.querySelectorAll('.c4-drop-btn');
+
+        const C4_ROWS = 6;
+        const C4_COLS = 7;
+        let c4BoardState = [];
+        let c4Player = 'red';
+        let c4Active = true;
+
+        function initC4() {
+            c4Board.innerHTML = '';
+            c4BoardState = Array(C4_ROWS).fill(null).map(() => Array(C4_COLS).fill(''));
+
+            for (let r = 0; r < C4_ROWS; r++) {
+                for (let c = 0; c < C4_COLS; c++) {
+                    const cell = document.createElement('button');
+                    cell.className = 'c4-cell';
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    cell.disabled = true;
+                    c4Board.appendChild(cell);
+                }
+            }
+        }
+
+        function c4Drop(col) {
+            if (!c4Active) return;
+
+            for (let r = C4_ROWS - 1; r >= 0; r--) {
+                if (c4BoardState[r][col] === '') {
+                    c4BoardState[r][col] = c4Player;
+                    const cell = c4Board.querySelector(`[data-row="${r}"][data-col="${col}"]`);
+                    cell.classList.add(c4Player, 'dropping');
+                    cell.disabled = false;
+
+                    if (c4CheckWin(r, col)) {
+                        c4Status.textContent = `Player ${c4Player.charAt(0).toUpperCase() + c4Player.slice(1)} wins!`;
+                        c4Active = false;
+                        c4Highlight(r, col);
+                    } else if (c4CheckDraw()) {
+                        c4Status.textContent = "It's a draw!";
+                        c4Active = false;
+                    } else {
+                        c4Player = c4Player === 'red' ? 'yellow' : 'red';
+                        c4Status.textContent = `Player ${c4Player.charAt(0).toUpperCase() + c4Player.slice(1)}'s turn`;
+                    }
+                    return;
+                }
+            }
+        }
+
+        function c4CheckWin(row, col) {
+            const player = c4BoardState[row][col];
+            const directions = [
+                [0, 1],  [1, 0],  [1, 1],  [1, -1]
+            ];
+
+            for (const [dr, dc] of directions) {
+                let count = 1;
+                for (let i = 1; i < 4; i++) {
+                    const r = row + dr * i, c = col + dc * i;
+                    if (r < 0 || r >= C4_ROWS || c < 0 || c >= C4_COLS || c4BoardState[r][c] !== player) break;
+                    count++;
+                }
+                for (let i = 1; i < 4; i++) {
+                    const r = row - dr * i, c = col - dc * i;
+                    if (r < 0 || r >= C4_ROWS || c < 0 || c >= C4_COLS || c4BoardState[r][c] !== player) break;
+                    count++;
+                }
+                if (count >= 4) return true;
+            }
+            return false;
+        }
+
+        function c4CheckDraw() {
+            return c4BoardState.every(row => row.every(cell => cell !== ''));
+        }
+
+        function c4Highlight(row, col) {
+            const player = c4BoardState[row][col];
+            const directions = [[0, 1], [1, 0], [1, 1], [1, -1]];
+
+            for (const [dr, dc] of directions) {
+                const cells = [{r: row, c: col}];
+                for (let i = 1; i < 4; i++) {
+                    const r = row + dr * i, c = col + dc * i;
+                    if (r < 0 || r >= C4_ROWS || c < 0 || c >= C4_COLS || c4BoardState[r][c] !== player) break;
+                    cells.push({r, c});
+                }
+                for (let i = 1; i < 4; i++) {
+                    const r = row - dr * i, c = col - dc * i;
+                    if (r < 0 || r >= C4_ROWS || c < 0 || c >= C4_COLS || c4BoardState[r][c] !== player) break;
+                    cells.push({r, c});
+                }
+                if (cells.length >= 4) {
+                    cells.forEach(({r, c}) => {
+                        c4Board.querySelector(`[data-row="${r}"][data-col="${c}"]`).classList.add('winner');
+                    });
+                    return;
+                }
+            }
+        }
+
+        function c4RestartGame() {
+            c4Player = 'red';
+            c4Active = true;
+            c4Status.textContent = "Player Red's turn";
+            initC4();
+        }
+
+        c4DropBtns.forEach(btn => btn.addEventListener('click', () => c4Drop(parseInt(btn.dataset.col))));
+        c4Restart.addEventListener('click', c4RestartGame);
+
+        initC4();
     </script>
 </body>
 </html>
